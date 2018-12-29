@@ -1,0 +1,7 @@
+baseURL = "https://badstreff.github.io/"
+languageCode = "en-us"
+title = "Bad String References"
+theme = "tale"
+
+[Author]
+  name = "Adam Furbee"
