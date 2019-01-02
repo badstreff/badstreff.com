@@ -1,7 +1,65 @@
 baseURL = "https://badstreff.github.io/"
 languageCode = "en-us"
-title = "Bad String References"
-theme = "tale"
+title = "badstreff"
+theme = "cactus"
+googleAnalytics = "UA-131545587-1"
+# Set the value to true if your site include CJK (Chinese, Japanese, and Korean languages) characters
+hasCJKLanguage = false
 
-[Author]
-  name = "Adam Furbee"
+[params]
+	author = "Adam Furbee"
+	description = "a place to gather pieces of information or post about tools I wrote that may be helpful to others"
+	bio = "automation, programming, reversing"
+
+	enableRSS = true
+	enableToc = true
+
+	enableDisqus = false
+
+	enableSummary = true
+	useDescriptionReplaceSummary = true
+
+	enableGoogleAnalytics = true
+
+	enableBaiduAnalytics = false
+	enableTwitterCard = false
+
+	# Add custom assets with their paths relative to the static folder
+	customCSS = []
+	customJS  = []
+
+	# The variables below are optionally too and can be used to
+	# translate or customize each string of the theme.
+
+	# Navigation links
+	home = ""
+	about = ""
+	archive = ""
+	subscribe = ""
+
+	olderPosts = ""
+	newerPosts = ""
+	copyright = ""
+
+	# show latest posts in single page
+	showLatestPosts = false
+	readMore = ""
+
+	# Share
+	enableShare = true
+	tweet = ""
+	share = ""
+
+	# 404 page
+	title404 = ""
+	subtitle404 = ""
+
+	# Choose a font for the social icons in the footer. Either "mono-social" or "font-awesome"
+	iconFont = "font-awesome"
+  # The social icons can be styled differently if you use mono as font - circle, rounded, or empty
+  socialIconStyle = ""
+
+
+# Add additional social link entries underneath
+[social]
+	github-square = "https://www.github.com/badstreff"
