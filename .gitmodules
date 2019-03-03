@@ -2,15 +2,6 @@
 	path = public
 	url = git@github.com:BadStreff/badstreff.github.io.git
 	branch = master
-[submodule "themes/tale"]
-	path = themes/tale
-	url = https://github.com/EmielH/tale-hugo.git
-[submodule "themes/cactus"]
-	path = themes/cactus
-	url = https://github.com/nodejh/hugo-theme-cactus-plus.git
-[submodule "themes/steam"]
-	path = themes/steam
-	url = https://github.com/digitalcraftsman/hugo-steam-theme.git
 [submodule "themes/hello-friend-ng"]
 	path = themes/hello-friend-ng
 	url = https://github.com/rhazdon/hugo-theme-hello-friend-ng.git
