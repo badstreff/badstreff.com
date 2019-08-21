@@ -60,7 +60,7 @@ RUN apt-get update \
     && cd $HOME/src \
     && git clone --branch $HUGO_VERSION https://github.com/gohugoio/hugo.git \
     && cd hugo \
-    && go install \
+    && go install --tags extended \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \

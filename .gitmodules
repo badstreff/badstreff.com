@@ -1,6 +1,6 @@
 [submodule "public"]
 	path = public
-	url = git@github.com:BadStreff/badstreff.github.io.git
+	url = git@github.com:badstreff/badstreff.github.io.git
 	branch = master
 [submodule "themes/hello-friend-ng"]
 	path = themes/hello-friend-ng
