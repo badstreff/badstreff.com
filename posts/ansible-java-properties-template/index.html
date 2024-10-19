@@ -1,0 +1,131 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Introduction
+This post should teach you some jinja tricks to make templating out the java .properties file format as painless as possible. For those unfamiliar they generally look something like the following example which was taken from the apache commons config guide. You can find more information and the original here
+# Properties definining the GUI
+colors.background = #FFFFFF
+colors.foreground = #000080
+
+window.width = 500
+window.height = 300
+Notice that they follow a dictionary like structure, if we were to represent
+this using yaml it would look something like this."><title>Using Ansible to Template Java .properties Files
+</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.08c29b7fac4a11577526584dfb08a52aee38883feba037f71d08cbe4ffde4eaffda104424494fea30b877bcb2969fe832338da1ea7b583435ce50fe3edae4777.css integrity="sha512-CMKbf6xKEVd1JlhN+wilKu44iD/roDf3HQjL5P/eTq/9oQRCRJT+owuHe8spaf6DIzjaHqe1g0Nc5Q/j7a5Hdw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><a href=/>..</a><article><p class=post-meta><time datetime="2018-12-31 17:59:13 -0600 -0600">2018-12-31</time></p><h1>Using Ansible to Template Java .properties Files</h1><h2 id=introduction>Introduction</h2><p>This post should teach you some jinja tricks to make templating out the java .properties file format as painless as possible. For those unfamiliar they generally look something like the following example which was taken from the apache commons config guide. You can find more information and the original <a href=https://commons.apache.org/proper/commons-configuration/userguide/howto_properties.html>here</a></p><pre tabindex=0><code># Properties definining the GUI
+colors.background = #FFFFFF
+colors.foreground = #000080
+
+window.width = 500
+window.height = 300
+</code></pre><p>Notice that they follow a dictionary like structure, if we were to represent
+this using yaml it would look something like this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#0f0># Properties definining the GUI</span>
+</span></span><span style=display:flex><span>colors:
+</span></span><span style=display:flex><span> background: <span style=color:#87ceeb>&#34;#FFFFFF&#34;</span>
+</span></span><span style=display:flex><span> foreground: <span style=color:#87ceeb>&#34;#000080&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>window:
+</span></span><span style=display:flex><span>  width: <span style=color:#f60>500</span>
+</span></span><span style=display:flex><span>  height: <span style=color:#f60>300</span>
+</span></span></code></pre></div><p>If we were to then create a template using the dictionary above to recreate the
+properties file originally posted it would look something like this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-django data-lang=django><span style=display:flex><span># Ansible Managed
+</span></span><span style=display:flex><span>colors.background = <span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>colors.background</span> <span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span>colors.foreground = <span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>colors.foreground</span> <span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>window.width = <span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>window.width</span> <span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span>window.height = <span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>window.height</span> <span style=color:#e5e5e5>}}</span>
+</span></span></code></pre></div><p>This is probably the route most people take when templating things out with
+ansible and for small files it&rsquo;s perfectly fine. However there are 2 problems
+that will creep up when scaling or attempting to use the above solution in a
+role and I&rsquo;m going to show you how to tackle each one.</p><h2 id=the-problems>The Problems</h2><h3 id=adding-variables>Adding Variables</h3><p>We are going to tackle adding variables first because it makes solving the 2nd
+issue a cake walk. You may have noticed already, that <strong>in order to add
+variables we will need to update both the template and dictionary above</strong>. In
+fact, putting the variables in a dictionary didn&rsquo;t help us save much typing
+because we still need to type out the full path in the template. We can tackle
+this problem by updating our template and restructuring our dictionary a
+little. Lets first tackle our dictionary, assuming the file we want to template
+out if going to be called <code>usergui.properties</code> we can structure our new
+dictionary like so.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>usergui_properties:
+</span></span><span style=display:flex><span>  colors:
+</span></span><span style=display:flex><span>   background: <span style=color:#87ceeb>&#34;#FFFFFF&#34;</span>
+</span></span><span style=display:flex><span>   foreground: <span style=color:#87ceeb>&#34;#000080&#34;</span>
+</span></span><span style=display:flex><span>  window:
+</span></span><span style=display:flex><span>    width: <span style=color:#f60>500</span>
+</span></span><span style=display:flex><span>    height: <span style=color:#f60>300</span>
+</span></span></code></pre></div><p>Now lets take a look at the template, we can user some
+<a href=http://jinja.pocoo.org/>jinja2</a> magic to automatically populate both the name
+and value based on the dictionary we pass.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-django data-lang=django><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>macro</span> <span style=color:#eedd82>f</span>(<span style=color:#eedd82>parent</span>, <span style=color:#eedd82>dict</span>) -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>for</span> <span style=color:#eedd82>k</span>, <span style=color:#eedd82>v</span> <span style=color:red>in</span> <span style=color:#eedd82>dict.items</span>() -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>if</span> <span style=color:#eedd82>v</span> <span style=color:red>is</span> <span style=color:#ff0>mapping</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>if</span> <span style=color:#eedd82>parent</span> == <span style=color:#87ceeb>&#34;&#34;</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>f</span>(<span style=color:#eedd82>k</span>, <span style=color:#eedd82>v</span>) <span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>else</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>f</span>(<span style=color:#eedd82>parent</span> + <span style=color:#87ceeb>&#34;.&#34;</span> + <span style=color:#eedd82>k</span>, <span style=color:#eedd82>v</span>) <span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>endif</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>else</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>if</span> <span style=color:#eedd82>parent</span> == <span style=color:#87ceeb>&#34;&#34;</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span><span style=color:#eedd82>k</span><span style=color:#e5e5e5>}}</span> = <span style=color:#e5e5e5>{{</span><span style=color:#eedd82>v</span><span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>else</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span><span style=color:#eedd82>parent</span><span style=color:#e5e5e5>}}</span>.<span style=color:#e5e5e5>{{</span><span style=color:#eedd82>k</span><span style=color:#e5e5e5>}}</span> = <span style=color:#e5e5e5>{{</span><span style=color:#eedd82>v</span><span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span> <span style=color:red>endif</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>endif</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>endfor</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>endmacro</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>f</span>(<span style=color:#87ceeb>&#34;&#34;</span>, <span style=color:#eedd82>usergui_properties</span>) <span style=color:#e5e5e5>}}</span>
+</span></span></code></pre></div><p>Wow! There&rsquo;s a lot going on right there, basically we have defined a recursive
+function <code>f</code> that we can call to traverse through a dictionary and build us out
+a .properties file. The nice thing about this being recursive instead of
+iterative is that we can nest dictionaries as deep as we want. Without the need
+to add another loop.</p><p>If you want to test this out yourself you can create a <code>vars.yml</code> file with the
+dictionary above along with the template named <code>usergui.properties.j2</code> and run
+the following command to see the output.</p><p><code>ansible all -i localhost, -c local -m template -a "src=usergui.properties.j2 dest=./usergui.properties" --extra-vars=@vars.yml</code></p><p>You can also try adding some variables to the dictionary and see that they are
+automatically added to the template. Nice!</p><p>You can use the jinja2 snippet above as-is or as a starting point for your own
+work.</p><h3 id=allowing-user-overrides>Allowing User Overrides</h3><p>So this is great, we can now allow users to define a dictionary with whatever
+structure they want and we can create a properties file though. Suppose we
+package this all up in a role but the defaults are usually good enough? The
+user of said role will now have to define the entire dictionary just to modify
+a single variable. There is an elegant solution to this problem using the jinja
+<a href=https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#combining-hashes-dictionaries>combine</a>
+filter. Take a look at our dictionary yet again redefined.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>usergui_properties:
+</span></span><span style=display:flex><span>  colors:
+</span></span><span style=display:flex><span>   background: <span style=color:#87ceeb>&#34;#000000&#34;</span>
+</span></span><span style=display:flex><span>   primary: <span style=color:#87ceeb>&#34;#FFFFFF&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>default_usergui_properties:
+</span></span><span style=display:flex><span>  colors:
+</span></span><span style=display:flex><span>   background: <span style=color:#87ceeb>&#34;#FFFFFF&#34;</span>
+</span></span><span style=display:flex><span>   foreground: <span style=color:#87ceeb>&#34;#000080&#34;</span>
+</span></span><span style=display:flex><span>  window:
+</span></span><span style=display:flex><span>    width: <span style=color:#f60>500</span>
+</span></span><span style=display:flex><span>    height: <span style=color:#f60>300</span>
+</span></span></code></pre></div><p>We now have 2 dictionaries, a <code>default_usergui_properties</code> and a
+<code>usergui_properties</code>, as you have probably guess the
+<code>default_usergui_properties</code> contains the defined defaults and the
+<code>usergui_properties</code> is for our users to override. We can then modify our
+template as show below to combine our 2 dictionaries.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-django data-lang=django><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>macro</span> <span style=color:#eedd82>f</span>(<span style=color:#eedd82>parent</span>, <span style=color:#eedd82>dict</span>) -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>for</span> <span style=color:#eedd82>k</span>, <span style=color:#eedd82>v</span> <span style=color:red>in</span> <span style=color:#eedd82>dict.items</span>() -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>if</span> <span style=color:#eedd82>v</span> <span style=color:red>is</span> <span style=color:#ff0>mapping</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>if</span> <span style=color:#eedd82>parent</span> == <span style=color:#87ceeb>&#34;&#34;</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>f</span>(<span style=color:#eedd82>k</span>, <span style=color:#eedd82>v</span>) <span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>else</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>f</span>(<span style=color:#eedd82>parent</span> + <span style=color:#87ceeb>&#34;.&#34;</span> + <span style=color:#eedd82>k</span>, <span style=color:#eedd82>v</span>) <span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>endif</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>else</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>if</span> <span style=color:#eedd82>parent</span> == <span style=color:#87ceeb>&#34;&#34;</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span><span style=color:#eedd82>k</span><span style=color:#e5e5e5>}}</span> = <span style=color:#e5e5e5>{{</span><span style=color:#eedd82>v</span><span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>else</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span><span style=color:#eedd82>parent</span><span style=color:#e5e5e5>}}</span>.<span style=color:#e5e5e5>{{</span><span style=color:#eedd82>k</span><span style=color:#e5e5e5>}}</span> = <span style=color:#e5e5e5>{{</span><span style=color:#eedd82>v</span><span style=color:#e5e5e5>}}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span> <span style=color:red>endif</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>endif</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>endfor</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{%</span>- <span style=color:red>endmacro</span> -<span style=color:#e5e5e5>%}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>f</span>(<span style=color:#87ceeb>&#34;&#34;</span>, <span style=color:#eedd82>default_usergui_properties</span> | <span style=color:#ff0>combine</span>(<span style=color:#eedd82>usergui_properties</span>, <span style=color:red>recursive</span>=<span style=color:red>True</span>)) <span style=color:#e5e5e5>}}</span>
+</span></span></code></pre></div><p>If you rerun the ansible ad-hoc command above you should now have a file in
+your current directory called <code>usergui.properties</code> with content similar to the
+following (order my differ)</p><pre tabindex=0><code>colors.foreground = #000080
+colors.primary = #FFFFFF
+colors.background = #000000
+window.width = 500
+window.height = 300
+</code></pre><p>As a final pointer, I would recommend making it clear in your documentation
+which variables should be considered &lsquo;private&rsquo; and which ones the user can
+overload. Hopefully you got something useful out of this, a similar thing can
+be done to template out ini files check back soon for a how-to on this as well.</p></article></div></main></body></html>
