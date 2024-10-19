@@ -1,30 +1,11 @@
-// For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
-// https://github.com/microsoft/vscode-dev-containers/tree/master/containers/go
 {
-	"name": "Go",
-	"dockerFile": "Dockerfile",
-	"runArgs": [
-		// Uncomment the next line to use a non-root user. See https://aka.ms/vscode-remote/containers/non-root-user.
-		// "-u", "1000",
-		"--cap-add=SYS_PTRACE",
-		"--security-opt",
-		"seccomp=unconfined",
-		"-v",
-		"${env:USERPROFILE}/.ssh:/root/.ssh-localhost:ro"
-	],
-	// Mount your .ssh folder to /root/.ssh-localhost so we can copy its contents
-	// Copy the contents to the correct location and set permissions
-	"postCreateCommand": "mkdir -p ~/.ssh && cp -r ~/.ssh-localhost/* ~/.ssh && chmod 700 ~/.ssh && chmod 600 ~/.ssh/*",
-	// Uncomment the next line if you want to publish any ports.
-	//"appPort": [],
-	// Uncomment the next line to run commands after the container is created.
-	// "postCreateCommand": "go version",
-	// Uncomment the next line to use a non-root user. See https://aka.ms/vscode-remote/containers/non-root-user.
-	// "runArgs": [ "-u", "1000" ],
-	"extensions": [
-		"ms-vscode.go"
-	],
-	"settings": {
-		"go.gopath": "/go"
-	}
-}
+	"image": "mcr.microsoft.com/devcontainers/go",
+  
+	"customizations": {
+	  "vscode": {
+		"extensions": []
+	  }
+	},
+	"forwardPorts": [1313],
+	"postCreateCommand": "sudo scripts/install-dependencies.sh"
+  }
