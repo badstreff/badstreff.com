@@ -1,0 +1,1 @@
+thoughts are my own
