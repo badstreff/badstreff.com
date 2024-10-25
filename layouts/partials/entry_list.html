@@ -1,0 +1,39 @@
+{{- $entries := "" -}}
+
+{{- if .section -}}
+    {{- $entries = (where site.RegularPages "Section" .section) -}}
+{{- else -}}
+    {{- if (eq .context.Kind "taxonomy") -}}
+        {{- $entries = .context.Pages -}}
+    {{- else -}}
+        {{- if (eq .context.Kind "term") -}}
+            {{- $entries = .context.Data.Pages -}}
+	{{- else -}}
+            {{- $entries = site.RegularPages }}
+	{{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{- $limit_exceeded:= "" -}}
+{{- if (and .limit (gt (len $entries) .limit)) -}}
+    {{- $limit_exceeded = true -}}
+{{- else -}}
+    {{- $limit_exceeded = false -}}
+{{ end }}
+
+{{- if (gt (len $entries) 0) }}
+    {{- if .limit }}
+        {{ $entries = (first .limit $entries ) }}
+    {{ end }}
+    <ul>
+        {{- range $entry := where $entries "Type" .type -}}
+        <li>
+            <span>{{- ($entry.Date | time.Format site.Params.theme_config.date_format) }}</span>
+            <a href="{{ $entry.Permalink | relURL }}">{{ $entry.Title }}</a>
+        </li>
+        {{ end }}
+        {{- if and .show_more $limit_exceeded }}
+            <li><a href="{{ .show_more_url | relURL }}">{{ .show_more_text | default "Show more..." }}</a></li>
+        {{ end }}
+    </ul>
+{{ end }}
