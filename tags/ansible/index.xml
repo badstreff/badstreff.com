@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ansible on badstreff</title><link>/tags/ansible/</link><description>Recent content in Ansible on badstreff</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 31 Dec 2018 17:59:13 -0600</lastBuildDate><atom:link href="/tags/ansible/index.xml" rel="self" type="application/rss+xml"/><item><title>Using Ansible to Template Java .properties Files</title><link>/posts/ansible-java-properties-template/</link><pubDate>Mon, 31 Dec 2018 17:59:13 -0600</pubDate><guid>/posts/ansible-java-properties-template/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>This post should teach you some jinja tricks to make templating out the java .properties file format as painless as possible. For those unfamiliar they generally look something like the following example which was taken from the apache commons config guide. You can find more information and the original &lt;a href="https://commons.apache.org/proper/commons-configuration/userguide/howto_properties.html">here&lt;/a>&lt;/p>
-&lt;pre tabindex="0">&lt;code># Properties definining the GUI
-colors.background = #FFFFFF
-colors.foreground = #000080
-
-window.width = 500
-window.height = 300
-&lt;/code>&lt;/pre>&lt;p>Notice that they follow a dictionary like structure, if we were to represent
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-properties" data-lang="properties">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0f0"># Properties definining the GUI&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>colors.background = &lt;span style="color:#87ceeb">#FFFFFF&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>colors.foreground = &lt;span style="color:#87ceeb">#000080&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>window.width = &lt;span style="color:#87ceeb">500&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>window.height = &lt;span style="color:#87ceeb">300&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Notice that they follow a dictionary like structure, if we were to represent
 this using yaml it would look something like this.&lt;/p></description></item></channel></rss>

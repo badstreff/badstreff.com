@@ -8,13 +8,13 @@ window.width = 500
 window.height = 300
 Notice that they follow a dictionary like structure, if we were to represent
 this using yaml it would look something like this."><title>Using Ansible to Template Java .properties Files
-</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.a0af10fb298cbd0cefb35ba775d682151a0f211c18f3c331be47726c76425707df9ac5cb3f044133e7ff7cf8c5c14e8da0eda72561090be63591fb17b804188f.css integrity="sha512-oK8Q+ymMvQzvs1unddaCFRoPIRwY88MxvkdybHZCVwffmsXLPwRBM+f/fPjFwU6NoO2nJWEJC+Y1kfsXuAQYjw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><a href=/>..</a><article><p class=post-meta><time datetime="2018-12-31 17:59:13 -0600 -0600">2018-12-31</time></p><h1>Using Ansible to Template Java .properties Files</h1><h2 id=introduction>Introduction</h2><p>This post should teach you some jinja tricks to make templating out the java .properties file format as painless as possible. For those unfamiliar they generally look something like the following example which was taken from the apache commons config guide. You can find more information and the original <a href=https://commons.apache.org/proper/commons-configuration/userguide/howto_properties.html>here</a></p><pre tabindex=0><code># Properties definining the GUI
-colors.background = #FFFFFF
-colors.foreground = #000080
-
-window.width = 500
-window.height = 300
-</code></pre><p>Notice that they follow a dictionary like structure, if we were to represent
+</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.8dcac619e4ff6f8e43dec36fc42dd2cee569ac32424b72e7491dd8b49701046da36dc5f855c2ddb6063ce48bfdda0653de56af5879528ec45c7bffcf9ae4c296.css integrity="sha512-jcrGGeT/b45D3sNvxC3SzuVprDJCS3LnSR3YtJcBBG2jbcX4VcLdtgY85Iv92gZT3lavWHlSjsRce//PmuTClg=="></head><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/default.min.css><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/django.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/properties.min.js integrity="sha512-DBdfI9We3Dqn8KZmvEYk3c+M82j7tezEjScjEOvzsKPIXaSqlw7Ghc5wBKZ1pLuh9NLRCzYSvw77JCFafHW+8g==" crossorigin=anonymous referrerpolicy=no-referrer></script><script>hljs.configure({cssSelector:"code",ignoreUnescapedHTML:!0}),hljs.highlightAll()</script><body a=auto><main class=page-content aria-label=Content><div class=w><a href=/>..</a><article><p class=post-meta><time datetime="2018-12-31 17:59:13 -0600 -0600">2018-12-31</time></p><h1>Using Ansible to Template Java .properties Files</h1><h2 id=introduction>Introduction</h2><p>This post should teach you some jinja tricks to make templating out the java .properties file format as painless as possible. For those unfamiliar they generally look something like the following example which was taken from the apache commons config guide. You can find more information and the original <a href=https://commons.apache.org/proper/commons-configuration/userguide/howto_properties.html>here</a></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#0f0># Properties definining the GUI</span>
+</span></span><span style=display:flex><span>colors.background = <span style=color:#87ceeb>#FFFFFF</span>
+</span></span><span style=display:flex><span>colors.foreground = <span style=color:#87ceeb>#000080</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>window.width = <span style=color:#87ceeb>500</span>
+</span></span><span style=display:flex><span>window.height = <span style=color:#87ceeb>300</span>
+</span></span></code></pre></div><p>Notice that they follow a dictionary like structure, if we were to represent
 this using yaml it would look something like this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#0f0># Properties definining the GUI</span>
 </span></span><span style=display:flex><span>colors:
 </span></span><span style=display:flex><span> background: <span style=color:#87ceeb>&#34;#FFFFFF&#34;</span>
@@ -24,7 +24,7 @@ this using yaml it would look something like this.</p><div class=highlight><pre 
 </span></span><span style=display:flex><span>  width: <span style=color:#f60>500</span>
 </span></span><span style=display:flex><span>  height: <span style=color:#f60>300</span>
 </span></span></code></pre></div><p>If we were to then create a template using the dictionary above to recreate the
-properties file originally posted it would look something like this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-django data-lang=django><span style=display:flex><span># Ansible Managed
+properties file originally posted it would look something like this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-jinja data-lang=jinja><span style=display:flex><span># Ansible Managed
 </span></span><span style=display:flex><span>colors.background = <span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>colors.background</span> <span style=color:#e5e5e5>}}</span>
 </span></span><span style=display:flex><span>colors.foreground = <span style=color:#e5e5e5>{{</span> <span style=color:#eedd82>colors.foreground</span> <span style=color:#e5e5e5>}}</span>
 </span></span><span style=display:flex><span>
@@ -128,4 +128,4 @@ window.height = 300
 </code></pre><p>As a final pointer, I would recommend making it clear in your documentation
 which variables should be considered &lsquo;private&rsquo; and which ones the user can
 overload. Hopefully you got something useful out of this, a similar thing can
-be done to template out ini files check back soon for a how-to on this as well.</p></article></div></main></body></html>
+be done to template out ini files check back soon for a how-to on this as well.</p></article></div><div class=footer>thoughts are my own</div></main></body></html>
