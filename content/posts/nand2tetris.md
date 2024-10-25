@@ -1,4 +1,5 @@
 ---
+type: post
 title: "My Nand2Tetris Journey: Lessons and Reflections"
 date: 2024-10-19T00:00:00-06:00
 draft: false

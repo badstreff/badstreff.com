@@ -16,7 +16,7 @@
     </ul>
     {{ end }}
 {{ else }}
-    {{ partial "post_list.html" (dict "context" . "section" .Section)}}
+    {{ partial "entry_list.html" (dict "context" . "type" "post" "section" .Section)}}
 {{ end }}
 
 {{ end }}

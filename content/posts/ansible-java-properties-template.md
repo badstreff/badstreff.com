@@ -1,4 +1,5 @@
 ---
+type: post
 title: "Using Ansible to Template Java .properties Files"
 description: "I tutorial on how you should be templating out and exposing java .properties file in your ansible roles."
 tags:
@@ -10,7 +11,7 @@ draft: false
 
 ## Introduction
 This post should teach you some jinja tricks to make templating out the java .properties file format as painless as possible. For those unfamiliar they generally look something like the following example which was taken from the apache commons config guide. You can find more information and the original [here](https://commons.apache.org/proper/commons-configuration/userguide/howto_properties.html)
-```
+```properties
 # Properties definining the GUI
 colors.background = #FFFFFF
 colors.foreground = #000080
@@ -36,7 +37,7 @@ window:
 If we were to then create a template using the dictionary above to recreate the
 properties file originally posted it would look something like this.
 
-```django
+```jinja
 # Ansible Managed
 colors.background = {{ colors.background }}
 colors.foreground = {{ colors.foreground }}

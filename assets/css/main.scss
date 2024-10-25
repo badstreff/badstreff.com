@@ -21,11 +21,6 @@
     text-decoration: none;
   }
 
-  code:not(pre > code) {
-    background-color: $--primary-text-color;
-    color: $--bg-color;
-  }
-
   *:target {
     background: $--highlight;
     color: $--primary-text-color;
@@ -121,30 +116,12 @@ hr {
   &:after { content: attr(data-content) '/////' }
 }
 
-pre {
-  background: black;
-  padding: 1em;
-  overflow-x: auto; /* Fix pre content overflowing parent without scroll bar */
-}
-
 table { width: 100%; }
 
 table, th, td {
   border: thin solid black;
   border-collapse: collapse;
   padding: 0.4rem;
-}
-
-code:not(pre > code) {
-  padding: 0.1em 0.2em;
-  font-size: 90%;
-}
-
-code.has-jax {
-  -webkit-font-smoothing: antialiased;
-  background: inherit !important;
-  border: none !important;
-  font-size: 100%;
 }
 
 blockquote {
