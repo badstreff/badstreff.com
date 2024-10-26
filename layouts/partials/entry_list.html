@@ -28,7 +28,7 @@
     <ul>
         {{- range $entry := where $entries "Type" .type -}}
         <li>
-            <span>{{- ($entry.Date | time.Format site.Params.theme_config.date_format) }}</span>
+            {{ if $entry.Date }} <span>{{- ($entry.Date | time.Format site.Params.theme_config.date_format) }}</span> {{ end }}
             <a href="{{ $entry.Permalink | relURL }}">{{ $entry.Title }}</a>
         </li>
         {{ end }}

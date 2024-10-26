@@ -3,9 +3,11 @@
 
 <article>
     <p class="post-meta">
+        {{ if .Date }}
         <time datetime="{{ .Date }}">
             {{ .Date | time.Format site.Params.theme_config.date_format }}
         </time>
+        {{ end }}
     </p>
 
     <h1>{{ .Title }}</h1>
