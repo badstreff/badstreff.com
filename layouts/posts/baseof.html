@@ -6,6 +6,8 @@
         <main class="page-content" aria-label="Content">
             <div class="w">
                 {{- block "main" . }}{{- end }}
+                <hr class="line" />
+                {{ partial "disqus.html" . }}
             </div>
             <div class="footer">
                 {{ partial "footer.html" }}

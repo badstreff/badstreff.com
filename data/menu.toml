@@ -3,7 +3,7 @@
 title = "posts"
   [entries.post_list]
   limit = 5
-  type = "post"
+  type = "posts"
   show_more = true
   show_more_text = "See archive..."
   show_more_url = "posts"
@@ -12,7 +12,7 @@ title = "posts"
 title = "projects"
   [entries.project_list]
   limit = 10
-  type = "project"
+  type = "projects"
   show_more = false
   show_more_text = "See more..."
   show_more_url = "projects"

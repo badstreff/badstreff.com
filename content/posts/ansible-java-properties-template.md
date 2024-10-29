@@ -1,5 +1,4 @@
 ---
-type: post
 title: "Using Ansible to Template Java .properties Files"
 description: "I tutorial on how you should be templating out and exposing java .properties file in your ansible roles."
 tags:

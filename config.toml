@@ -2,6 +2,7 @@ baseURL = "/"
 languageCode = "en-us"
 title = "badstreff"
 
+
 [module]
   [module.hugoVersion]
     extended=true
@@ -14,6 +15,13 @@ title = "badstreff"
   #   path = 'github.com/hanwenguo/hugo-theme-nostyleplease'
   #   disable = false
 
+
+[privacy]
+  [privacy.disqus]
+    disable = false
+[services]
+  [services.disqus]
+    shortname = 'badstreff'
 
 
 [markup]

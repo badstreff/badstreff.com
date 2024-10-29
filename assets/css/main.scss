@@ -116,6 +116,13 @@ hr {
   &:after { content: attr(data-content) '/////' }
 }
 
+hr.line {
+  text-align: center;
+  border: 0;
+  &:before { content: '-----' }
+  &:after { content: attr(data-content) '-----' }
+}
+
 table { width: 100%; }
 
 table, th, td {
