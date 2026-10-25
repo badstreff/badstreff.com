@@ -16,14 +16,6 @@ title = "badstreff"
   #   disable = false
 
 
-[privacy]
-  [privacy.disqus]
-    disable = false
-[services]
-  [services.disqus]
-    shortname = 'badstreff'
-
-
 [markup]
   [markup.goldmark]
     [markup.goldmark.parser]
