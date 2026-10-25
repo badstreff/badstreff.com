@@ -1,11 +1,10 @@
 {
 	"image": "mcr.microsoft.com/devcontainers/go",
-  
+
 	"customizations": {
 	  "vscode": {
 		"extensions": []
 	  }
 	},
-	"forwardPorts": [1313],
-	"postCreateCommand": "sudo scripts/install-dependencies.sh"
+	"forwardPorts": [1313]
   }

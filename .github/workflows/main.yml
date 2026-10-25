@@ -17,14 +17,22 @@ jobs:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
+      - name: Setup Go
+        uses: actions/setup-go@v6
         with:
-          hugo-version: '0.136.2'
-          extended: true
+          go-version-file: go.mod
+
+      - name: Setup Dart Sass
+        env:
+          DART_SASS_VERSION: '1.106.1'
+        run: |
+          curl --fail --location --silent --show-error "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" --output "$RUNNER_TEMP/dart-sass.tar.gz"
+          echo "ad99cccb90de4ad2926e03e32d819c83baf32c3dbff56da92df0eed10e604d60  $RUNNER_TEMP/dart-sass.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/dart-sass.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/dart-sass" >> "$GITHUB_PATH"
 
       - name: Build
-        run: hugo --minify
+        run: go tool hugo --minify
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
